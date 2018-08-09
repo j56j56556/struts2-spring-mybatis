@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "struts-2.3.dtd" "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+<!--<constant name="struts.enable.DynamicMethodInvocation" value="true"></constant>-->
+<constant name="struts.action.extension" value="action,,"></constant>
+<constant name="struts.devMode" value="true"></constant>
+<constant name="struts.enable.SlashesInActionNames" value="true"/>
+<include file="com/homework/foshan/action/struts.xml"></include>
+</struts>
+

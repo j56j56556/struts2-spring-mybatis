@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "struts-2.3.dtd" "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<constant name="struts.objectFactory" value="spring"></constant>
+	<package namespace="/zhuye" name="q" extends="struts-default">
+	<!-- 拦截器 -->
+	<interceptors>
+		<interceptor name="Islogining" class="com.zhku.filter.Loginfilter"></interceptor>
+		<interceptor name="bianma" class="com.zhku.filter.Bianma"></interceptor>
+		<interceptor name="buslogining" class="com.zhku.filter.Buslogining"></interceptor>
+		<interceptor-stack name="stack">
+			<interceptor-ref name="bianma">
+			</interceptor-ref>
+			<interceptor-ref name="Islogining">
+			</interceptor-ref>	
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</interceptor-stack>
+		<interceptor-stack name="busstack">
+			<interceptor-ref name="bianma">
+			</interceptor-ref>
+			<interceptor-ref name="buslogining">
+			</interceptor-ref>	
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</interceptor-stack>	
+	</interceptors>
+
+	<!-- <default-interceptor-ref name="stack"></default-interceptor-ref> -->
+		<global-results>
+		<result name="jumplogin" >
+			/denglu.jsp
+		</result>
+		</global-results>
+		<global-exception-mappings >
+		<exception-mapping result="error" exception="java.lang.RuntimeException"></exception-mapping>
+		</global-exception-mappings>
+		<!-- 用户 -->
+		<action name="login" class="loginAction" method="checklogin">
+			<result name="success" type="stream">				
+                <param name="contentType">text/html</param>
+                <param name="inputName">streamActionResult</param>
+            </result>
+            <result name="error" >
+            /denglu.jsp
+            </result>
+		</action>
+	
+		<action name="register" class="loginAction" method="register">
+			<result name="success" type="redirect">/denglu.jsp</result>
+		</action>
+		<action name="checkmember" class="loginAction" method="checkrepeat">
+			<result name="success" type="stream">
+                <param name="contentType">text/html</param>
+                <param name="inputName">streamActionResult</param>
+            </result>
+		</action>
+		<!-- 商家展示 -->
+		<action name="businessshow" class="businessshow" method="show">
+			<result name="success">/mainfold/shangjia.jsp</result>
+		</action>
+		<action name="fenshow" class="businessshow" method="showline">
+			<result name="success">/mainfold/shangjialine.jsp</result>
+		</action>		
+		
+		<action name="foodshow" class="foodshow" method="show">
+			<result name="success">/mainfold/shangpinzhanshi.jsp</result>
+
+		</action>
+		
+		<action name="add" class="ordershow" method="add">
+				<interceptor-ref name="stack"></interceptor-ref>
+		</action>
+		
+		<action name="delete" class="ordershow" method="deletefood">
+				<interceptor-ref name="stack"></interceptor-ref>
+		</action>
+		
+		<action name="userorder" class="ordershow" method="showuserorder">
+			<interceptor-ref name="stack"></interceptor-ref>
+			<result name="success">/mainfold/myorder.jsp</result>
+		</action>
+		
+		<action name="busorder" class="ordershow" method="showbusorder">
+			<interceptor-ref name="busstack"></interceptor-ref>
+			<result name="success">/mainfold/busorder.jsp</result>
+		</action>
+		
+		<!--用户提交订单  -->
+		<action name="usercommitorder" class="ordershow" method="usercommitorder">
+			<interceptor-ref name="stack"></interceptor-ref>
+			<result name="success" type="redirectAction">userorder</result>
+		</action>
+		<!--商家操作订单  -->
+		<action name="operateorder" class="ordershow" method="operateorder">
+			<interceptor-ref name="busstack"></interceptor-ref>
+			<result name="success" type="redirectAction">busorder</result>
+		</action>
+		<!-- 菜单 -->
+		<action name="busmenushow" class="foodshow" method="busmenushow">
+			<interceptor-ref name="busstack"></interceptor-ref>
+			<result name="success" >/mainfold/houtaimenu.jsp</result>
+		</action>
+		<!-- 操作 -->
+		<action name="addfood" class="foodshow" method="addfood">
+			<interceptor-ref name="busstack"></interceptor-ref>
+			<result name="success" type="redirectAction">busmenushow</result>
+		</action>
+		<action name="deletefood" class="foodshow" method="deletefood">
+			<interceptor-ref name="busstack"></interceptor-ref>
+			<result name="success" type="redirectAction">busmenushow</result>
+		</action>
+		<action name="updatefood" class="foodshow" method="updatefood">
+			<interceptor-ref name="busstack"></interceptor-ref>
+			<result name="success" type="redirectAction">busmenushow</result>
+		</action>
+		<!--商家信息  -->
+		<action name="busmessage" class="businessshow" method="businessmessage">
+		<interceptor-ref name="busstack"></interceptor-ref>
+			<result name="success" >/mainfold/businessmessage.jsp</result>
+		</action>
+		<!--用户信息  -->
+		<action name="usermessage" class="loginAction" method="usermessage">
+			<interceptor-ref name="stack"></interceptor-ref>
+			<result name="success" >/mainfold/mymessage.jsp</result>
+		</action>
+	</package>
+</struts>
+
